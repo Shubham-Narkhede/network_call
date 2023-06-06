@@ -9,9 +9,9 @@ import '../model/ModelRocket.dart';
 
 part 'CubitState.dart';
 
-class CubitRocketCubit extends Cubit<CubitRocketState> {
+class CubitRocket extends Cubit<CubitRocketState> {
   Repo? repo;
-  CubitRocketCubit({this.repo}) : super(CubitRocketInitialState()) {
+  CubitRocket({this.repo}) : super(CubitRocketInitialState()) {
     getListRockets();
   }
 

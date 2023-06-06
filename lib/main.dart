@@ -4,6 +4,8 @@ import 'package:network_call/cubit/CubitRocket.dart';
 import 'package:network_call/repo/Repo.dart';
 import 'package:network_call/screen/ScreenRocketListing.dart';
 
+import 'cubit/CubitRocketDetails.dart';
+
 void main() {
   runApp(const MainApp());
 }
@@ -15,7 +17,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: MultiBlocProvider(providers: [
-      BlocProvider(create: (_) => CubitRocketCubit(repo: Repo.instance))
-    ], child: ScreenRocketLising()));
+      BlocProvider(create: (_) => CubitRocket(repo: Repo.instance)),
+    ], child: ScreenRocketListing()));
   }
 }

@@ -10,6 +10,7 @@ class Repo {
   }
 
   Future<dynamic> getRocketDetails(String id) async {
-    await HttpMethod(apiUrl: "${ApiHelper.instance.apiRocket}/$id").getData();
+    return await HttpMethod(apiUrl: "${ApiHelper.instance.apiRocket}/$id")
+        .getData();
   }
 }
