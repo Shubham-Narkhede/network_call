@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:network_call/cubit/CubitRocket.dart';
@@ -113,9 +114,11 @@ class _ScreenRocketListingState extends State<ScreenRocketListing> {
                           isSlideShow: true,
                           duration: 5,
                           widgetList: rocket.flickrImages!.map<Widget>((e) {
-                            return Image.network(
-                              e,
+                            return CachedNetworkImage(
+                              imageUrl: e,
                               fit: BoxFit.fill,
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
                             );
                           }).toList(),
                         ),
