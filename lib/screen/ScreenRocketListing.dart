@@ -10,6 +10,7 @@ import '../widgets/WidgetLoader.dart';
 import '../widgets/WidgetText.dart';
 import 'ScreenRocketDetails.dart';
 
+// ScreenRocketListing this screen is created for showing all the listing of rocket
 class ScreenRocketListing extends StatefulWidget {
   @override
   _ScreenRocketListingState createState() => _ScreenRocketListingState();
@@ -33,12 +34,18 @@ class _ScreenRocketListingState extends State<ScreenRocketListing> {
         centerTitle: true,
         title: widgetText("Rocket Listing", fontSize: 20),
       ),
+
+      /// if local database is null then we are showing loader until data loads
       body: list == null
           ? WidgetLoader()
+          /// if list is empty means if local database is empty then we are fetching data from
+          /// network and build the list using bloc
           : list!.isEmpty
               ? BlocListener<CubitRocket, CubitRocketState>(
                   listener: (_, state) {
                     if (state is CubitRocketLoadedState) {
+                      /// by using this listener we are managing the data which we are putting in the
+                      /// sqflite
                       state.listRockets!.forEach((x) {
                         DataBaseOperation.instance.insertData(x);
                       });
@@ -78,6 +85,7 @@ class _ScreenRocketListingState extends State<ScreenRocketListing> {
               ModelRocket rocket = list[index];
               return InkWell(
                 onTap: () {
+                  /// Here we are navigating to the details page
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -158,6 +166,7 @@ class _ScreenRocketListingState extends State<ScreenRocketListing> {
     );
   }
 
+  /// this method is created for getting all the rockets from local db which we stored in database
   getDataFromLocal() {
     DataBaseOperation.instance.getAllStoredData().then((value) {
       setState(() {

@@ -2,11 +2,14 @@ import '../main.dart';
 import '../model/ModelRocket.dart';
 import 'DatabaseHelper.dart';
 
+/// DataBaseOperation is a singlton class created for all the operation like get, add from the local database
 class DataBaseOperation {
   DataBaseOperation._();
 
+  // here we have created instance of class
   static final instance = DataBaseOperation._();
 
+  /// InsertData this method is created for insert all the information in sqflite database
   insertData(ModelRocket x) async {
     final allRows = await dbHelper.queryAllRows();
 
@@ -33,6 +36,7 @@ class DataBaseOperation {
     }
   }
 
+  /// to get all the stored data we have created this method
   Future<List<ModelRocket>> getAllStoredData() async {
     List<ModelRocket> list = [];
     final allRows = await dbHelper.queryAllRows();
@@ -58,6 +62,7 @@ class DataBaseOperation {
     return list;
   }
 
+  // This method is created for getting detail of rocket from id
   Future<ModelRocket> getRocketDetails(String id) async {
     ModelRocket rocket;
     final allRows = await dbHelper.queryRocketDetail(id);

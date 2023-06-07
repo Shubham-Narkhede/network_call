@@ -11,6 +11,7 @@ import '../widgets/WidgetError.dart';
 import '../widgets/WidgetLoader.dart';
 import '../widgets/WidgetText.dart';
 
+// ScreenRocketDetails this screen is created for showing rocket details
 class ScreenRocketDetails extends StatefulWidget {
   final String id;
 
@@ -25,14 +26,6 @@ class _ScreenRocketDetailsState extends State<ScreenRocketDetails> {
   void initState() {
     super.initState();
     getDataFromLocal();
-  }
-
-  getDataFromLocal() {
-    DataBaseOperation.instance.getRocketDetails(widget.id).then((value) {
-      setState(() {
-        rocketDetails = value;
-      });
-    });
   }
 
   @override
@@ -143,5 +136,14 @@ class _ScreenRocketDetailsState extends State<ScreenRocketDetails> {
         ])),
       ),
     );
+  }
+
+  /// here we are getting the data of rocket from local database by using id
+  getDataFromLocal() {
+    DataBaseOperation.instance.getRocketDetails(widget.id).then((value) {
+      setState(() {
+        rocketDetails = value;
+      });
+    });
   }
 }
