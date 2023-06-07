@@ -5,8 +5,14 @@ import 'package:network_call/repo/Repo.dart';
 import 'package:network_call/screen/ScreenRocketListing.dart';
 
 import 'cubit/CubitRocketDetails.dart';
+import 'database/DatabaseHelper.dart';
 
-void main() {
+final dbHelper = DatabaseHelper();
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dbHelper.init();
+
   runApp(const MainApp());
 }
 

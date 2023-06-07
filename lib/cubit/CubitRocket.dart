@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:network_call/repo/Repo.dart';
 
+import '../main.dart';
 import '../model/ModelRocket.dart';
 
 part 'CubitState.dart';

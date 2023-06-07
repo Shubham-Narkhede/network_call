@@ -6,6 +6,7 @@ import 'package:network_call/model/ModelRocket.dart';
 import 'package:network_call/repo/Repo.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../database/DatabaseOperation.dart';
 import '../widgets/WidgetError.dart';
 import '../widgets/WidgetLoader.dart';
 import '../widgets/WidgetText.dart';
@@ -19,9 +20,19 @@ class ScreenRocketDetails extends StatefulWidget {
 }
 
 class _ScreenRocketDetailsState extends State<ScreenRocketDetails> {
+  ModelRocket? rocketDetails;
   @override
   void initState() {
     super.initState();
+    getDataFromLocal();
+  }
+
+  getDataFromLocal() {
+    DataBaseOperation.instance.getRocketDetails(widget.id).then((value) {
+      setState(() {
+        rocketDetails = value;
+      });
+    });
   }
 
   @override
@@ -33,68 +44,75 @@ class _ScreenRocketDetailsState extends State<ScreenRocketDetails> {
         centerTitle: true,
         title: widgetText("Rocket Details", fontSize: 20),
       ),
-      body: BlocBuilder<CubitRocketDetails, CubitRocketState>(
-        bloc: CubitRocketDetails(repo: Repo.instance, id: widget.id),
-        builder: (context, state) {
-          if (state is CubitRocketLoadingState) {
-            return WidgetLoader();
-          } else if (state is CubitRocketErrorState) {
-            return WidgetError(
-              error: state.error,
-              onTap: () {
-                context.read<CubitRocketDetails>().getRocketDetails(widget.id);
-              },
-            );
-          } else if (state is CubitRocketLoadedState) {
-            ModelRocket rocket = state.rocketDetails!;
-
-            return SingleChildScrollView(
-              child: Container(
-                margin: const EdgeInsets.only(left: 16, right: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        margin: const EdgeInsets.only(top: 10, bottom: 10),
-                        child: Center(
-                            child: widgetText(rocket.name!.toUpperCase(),
-                                fontSize: 20))),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: rocket.flickrImages!.map<Widget>((e) {
-                          return Container(
-                              margin: const EdgeInsets.only(right: 10),
-                              child: Image.network(
-                                e,
-                                height: MediaQuery.of(context).size.height / 4,
-                              ));
-                        }).toList(),
-                      ),
-                    ),
-                    widgetRowText(
-                        "Is Active: ", rocket.active == true ? "Yes" : "No"),
-                    widgetRowText(
-                        "Cost Per Launch: ", "₹ ${rocket.costPerLaunch}"),
-                    widgetRowText(
-                        "Success Rate percent: ", "${rocket.successRatePct}%"),
-                    widgetRowText("Description: ", "${rocket.description}"),
-                    widgetRowText("Wikipedia link: ", "${rocket.wikipedia}",
-                        onTap: () async {
-                      await launchUrl(Uri.parse(rocket.wikipedia!.toString()));
-                    }),
-                    widgetRowText("Height: ",
-                        "${rocket.height!.feet} F /${rocket.height!.meters} m"),
-                    widgetRowText("Diameter: ",
-                        "${rocket.diameter!.feet} F /${rocket.diameter!.meters} m"),
-                  ],
+      body: rocketDetails == null
+          ? WidgetLoader()
+          : rocketDetails != null
+              ? widgetDetails(rocketDetails!)
+              : BlocBuilder<CubitRocketDetails, CubitRocketState>(
+                  bloc: CubitRocketDetails(repo: Repo.instance, id: widget.id),
+                  builder: (context, state) {
+                    if (state is CubitRocketLoadingState) {
+                      return WidgetLoader();
+                    } else if (state is CubitRocketErrorState) {
+                      return WidgetError(
+                        error: state.error,
+                        onTap: () {
+                          context
+                              .read<CubitRocketDetails>()
+                              .getRocketDetails(widget.id);
+                        },
+                      );
+                    } else if (state is CubitRocketLoadedState) {
+                      ModelRocket rocket = state.rocketDetails!;
+                      return widgetDetails(rocket);
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
                 ),
+    );
+  }
+
+  Widget widgetDetails(ModelRocket rocket) {
+    return SingleChildScrollView(
+      child: Container(
+        margin: const EdgeInsets.only(left: 16, right: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+                margin: const EdgeInsets.only(top: 10, bottom: 10),
+                child: Center(
+                    child:
+                        widgetText(rocket.name!.toUpperCase(), fontSize: 20))),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: rocket.flickrImages!.map<Widget>((e) {
+                  return Container(
+                      margin: const EdgeInsets.only(right: 10),
+                      child: Image.network(
+                        e,
+                        height: MediaQuery.of(context).size.height / 4,
+                      ));
+                }).toList(),
               ),
-            );
-          } else {
-            return const SizedBox.shrink();
-          }
-        },
+            ),
+            widgetRowText("Is Active: ", rocket.active == true ? "Yes" : "No"),
+            widgetRowText("Cost Per Launch: ", "₹ ${rocket.costPerLaunch}"),
+            widgetRowText(
+                "Success Rate percent: ", "${rocket.successRatePct}%"),
+            widgetRowText("Description: ", "${rocket.description}"),
+            widgetRowText("Wikipedia link: ", "${rocket.wikipedia}",
+                onTap: () async {
+              await launchUrl(Uri.parse(rocket.wikipedia!.toString()));
+            }),
+            widgetRowText("Height: ",
+                "${rocket.height!.feet} F /${rocket.height!.meters} m"),
+            widgetRowText("Diameter: ",
+                "${rocket.diameter!.feet} F /${rocket.diameter!.meters} m"),
+          ],
+        ),
       ),
     );
   }
