@@ -24,8 +24,6 @@ class _ScreenRocketListingState extends State<ScreenRocketListing> {
   void initState() {
     super.initState();
     getDataFromLocal();
-
-    DataBaseOperation.instance.clearCache(context);
   }
 
   @override
