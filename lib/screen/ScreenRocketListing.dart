@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:network_call/cubit/CubitRocket.dart';
 import 'package:network_call/model/ModelRocket.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../database/DatabaseOperation.dart';
 import '../widgets/WidgetCarosual.dart';
@@ -23,6 +24,8 @@ class _ScreenRocketListingState extends State<ScreenRocketListing> {
   void initState() {
     super.initState();
     getDataFromLocal();
+
+    DataBaseOperation.instance.clearCache(context);
   }
 
   @override

@@ -1,3 +1,8 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path/path.dart';
+
+import '../cubit/CubitRocket.dart';
 import '../main.dart';
 import '../model/ModelRocket.dart';
 import 'DatabaseHelper.dart';
@@ -94,5 +99,17 @@ class DataBaseOperation {
             int.parse(data[DatabaseHelper.columnCostPerLaunch].toString()));
 
     return rocket;
+  }
+
+  clearCache(BuildContext ctx) async {
+    DateTime now = DateTime.now();
+
+    DateTime expiryTime = DateTime.fromMillisecondsSinceEpoch(
+        now.add(const Duration(seconds: 5)).millisecondsSinceEpoch);
+
+    if (now.isAfter(expiryTime)) {
+      BlocProvider.of<CubitRocket>(ctx).getListRockets();
+      final allRows = await dbHelper.queryDelete();
+    }
   }
 }

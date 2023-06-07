@@ -80,4 +80,9 @@ class DatabaseHelper {
     return await _db
         .query(table, where: '$columnRocketId = ?', whereArgs: [id]);
   }
+
+  // Here we are getting only particular rocket details from the database
+  Future<dynamic> queryDelete() async {
+    return await _db.delete(table);
+  }
 }
