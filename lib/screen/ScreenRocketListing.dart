@@ -22,7 +22,6 @@ class _ScreenRocketListingState extends State<ScreenRocketListing> {
   @override
   void initState() {
     super.initState();
-
     getDataFromLocal();
   }
 
@@ -38,6 +37,7 @@ class _ScreenRocketListingState extends State<ScreenRocketListing> {
       /// if local database is null then we are showing loader until data loads
       body: list == null
           ? WidgetLoader()
+
           /// if list is empty means if local database is empty then we are fetching data from
           /// network and build the list using bloc
           : list!.isEmpty
